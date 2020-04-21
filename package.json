@@ -1,0 +1,15 @@
+{
+  "name": "part-8-graphql",
+  "version": "1.0.0",
+  "description": "graphql tutorial",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Joe M.",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server": "^2.12.0",
+    "graphql": "^15.0.0"
+  }
+}
