@@ -31,7 +31,7 @@ const authors = [
  * Yksinkertaisuuden vuoksi tallennamme kuitenkin kirjan yhteyteen tekijän nimen
  */
 
-const books = [
+let books = [
   {
     title: "Clean Code",
     published: 2008,
@@ -92,7 +92,8 @@ const typeDefs = gql`
   }
   type Author {
     name: String!
-    bookCount: Int
+    bookCount: Int!
+    born: Int
   }
 
   type Book {
@@ -101,6 +102,15 @@ const typeDefs = gql`
     author: String!
     genres: [String!]!
     id: ID!
+  }
+  type Mutation {
+    addBook(
+      title: String!
+      author: String!
+      published: Int!
+      genres: [String!]
+    ): Book
+    editAuthor(name: String!, setBornTo: Int!): Author
   }
 `
 
@@ -119,6 +129,27 @@ const resolvers = {
     name: (root) => root.name,
     bookCount: (root) =>
       books.filter((book) => book.author === root.name).length,
+    born: (root) => root.born,
+  },
+
+  Mutation: {
+    addBook: (root, args) => {
+      const bookToAdd = { ...args }
+      books = books.concat(bookToAdd)
+      return bookToAdd
+    },
+    editAuthor: (root, args) => {
+      const authorToEdit = { name: args.name, born: args.setBornTo }
+      const search = authors.find((author) => author.name === args.name)
+      if (!search) {
+        return null
+      }
+
+      authors.map((author) => {
+        author.name === args.name ? { ...author, ...authorToEdit } : author
+      })
+      return authorToEdit
+    },
   },
 }
 
