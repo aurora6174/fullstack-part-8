@@ -1,6 +1,6 @@
 const { ApolloServer, gql } = require("apollo-server")
 
-const authors = [
+let authors = [
   {
     name: "Robert Martin",
     id: "afa51ab0-344d-11e9-a414-719c6709cf3e",
@@ -89,13 +89,13 @@ const typeDefs = gql`
     authorCount: Int!
     allBooks(author: String!, genre: String!): [Book!]!
     allAuthors: [Author]!
+    booksInDB: [Book!]!
   }
   type Author {
     name: String!
     bookCount: Int!
     born: Int
   }
-
   type Book {
     title: String!
     published: Int!
@@ -108,9 +108,10 @@ const typeDefs = gql`
       title: String!
       author: String!
       published: Int!
-      genres: [String!]
+      genres: [String!]!
     ): Book
     editAuthor(name: String!, setBornTo: Int!): Author
+    removeBook(title: String!): Book
   }
 `
 
@@ -124,6 +125,7 @@ const resolvers = {
           book.author === args.author && book.genres.includes(args.genre)
       ),
     allAuthors: () => authors,
+    booksInDB: () => books,
   },
   Author: {
     name: (root) => root.name,
@@ -135,8 +137,17 @@ const resolvers = {
   Mutation: {
     addBook: (root, args) => {
       const bookToAdd = { ...args }
+      const newBookAuthor = books.find((book) => book.author === args.author)
+      if (!newBookAuthor) {
+        authors = authors.concat({ name: args.author })
+      }
       books = books.concat(bookToAdd)
       return bookToAdd
+    },
+    removeBook: (root, args) => {
+      const bookToRemove = { ...args }
+      books = books.filter((book) => book.title !== args.title)
+      return bookToRemove
     },
     editAuthor: (root, args) => {
       const authorToEdit = { name: args.name, born: args.setBornTo }
@@ -148,6 +159,7 @@ const resolvers = {
       authors.map((author) => {
         author.name === args.name ? { ...author, ...authorToEdit } : author
       })
+      console.log(authors)
       return authorToEdit
     },
   },
