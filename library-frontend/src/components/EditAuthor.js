@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { useMutation } from "@apollo/client"
 import { EDIT_AUTHOR, ALL_AUTHORS } from "../queries"
+import Select from "react-select"
 
 const EditAuthor = (props) => {
   const [editAuthorDetails] = useMutation(EDIT_AUTHOR, {
@@ -9,14 +10,21 @@ const EditAuthor = (props) => {
       props.setError(error.message)
     },
   })
-  const [name, setName] = useState("")
+  let authorsInDB = []
+  const nameList = props.authorList.map((author) => author.name)
+
+  nameList.forEach((author) =>
+    authorsInDB.push({ value: author, label: author })
+  )
+
+  const [name, setName] = useState({})
   const [born, setBorn] = useState("")
   const submit = async (event) => {
     event.preventDefault()
     editAuthorDetails({
-      variables: { name, setBornTo: Number(born) },
+      variables: { name: name.value, setBornTo: Number(born) },
     })
-    console.log(`name: ${name}, born: ${born}`)
+    console.log(`name: ${name.value}, born: ${born}`)
 
     setName("")
     setBorn("")
@@ -27,10 +35,13 @@ const EditAuthor = (props) => {
       <h2>Set BirthYear</h2>
       <form onSubmit={submit}>
         Name:{" "}
-        <input
-          type="text"
-          value={name}
-          onChange={({ target }) => setName(target.value)}
+        <Select
+          options={authorsInDB}
+          onChange={setName}
+          autoFocus
+          isSearchable
+          placeholder="Search author"
+          noOptionsMessage={() => "No other author available :("}
         />
         SetBorn:{" "}
         <input

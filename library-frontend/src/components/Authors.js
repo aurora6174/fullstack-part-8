@@ -34,7 +34,7 @@ const Authors = ({ show, setError }) => {
           ))}
         </tbody>
       </table>
-      <EditAuthor setError={setError} />
+      <EditAuthor setError={setError} authorList={authors} />
     </div>
   )
 }
