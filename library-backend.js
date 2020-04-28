@@ -1,4 +1,15 @@
-const { ApolloServer, gql } = require("apollo-server")
+const { ApolloServer, UserInputError, gql } = require("apollo-server")
+const mongoose = require("mongoose")
+const Author = require("./models/author")
+const Book = require("./models/books")
+mongoose.set("useFindAndModify", false)
+const MONGODB_URI = `mongodb+srv://joe-martin:5HduydtLvZ4OR0nP@cluster0-2okkp.mongodb.net/graphql-library?retryWrites=true&w=majority`
+console.log(`connecting to`, MONGODB_URI)
+
+mongoose
+  .connect(MONGODB_URI, { useNewUrlParser: true })
+  .then(() => console.log(`Connected to mongoDB`))
+  .catch((error) => console.log(`error connecting to mongoDB`, error.message))
 
 let authors = [
   {
@@ -99,7 +110,7 @@ const typeDefs = gql`
   type Book {
     title: String!
     published: Int!
-    author: String!
+    author: Author!
     genres: [String!]!
     id: ID!
   }
