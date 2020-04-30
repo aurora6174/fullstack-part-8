@@ -15,7 +15,7 @@ const typeDefs = gql`
   type Query {
     bookCount: Int!
     authorCount: Int!
-    allBooks(author: String!, genre: String!): [Book!]!
+    allBooks(author: String!): [Book!]!
     allAuthors: [Author]!
     booksInDB: [Book!]!
   }
@@ -48,11 +48,7 @@ const resolvers = {
   Query: {
     bookCount: () => Book.collection.countDocuments(),
     authorCount: () => Author.collection.countDocuments(),
-    allBooks: (root, args) =>
-      books.filter(
-        (book) =>
-          book.author === args.author && book.genres.includes(args.genre)
-      ),
+    allBooks: (root, args) => Book.find({ author: args.author }),
     allAuthors: (root, args) => Author.find({}),
     booksInDB: (root, args) => Book.find({}),
   },
@@ -63,18 +59,39 @@ const resolvers = {
   },
 
   Mutation: {
-    addBook: (root, args) => {
+    addBook: async (root, args) => {
       const bookToAdd = new Book({ ...args })
-      return bookToAdd.save()
+      try {
+        await bookToAdd.save()
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        })
+      }
+      return bookToAdd
     },
-    addAuthor: (root, args) => {
+    addAuthor: async (root, args) => {
       const authorToAdd = new Author({ ...args })
-      return authorToAdd.save()
+      try {
+        await authorToAdd.save()
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        })
+      }
+      return authorToAdd
     },
     editAuthor: async (root, args) => {
       const authorToEdit = await Author.findOne({ name: args.name })
-      authorToEdit.born = args.setBornTo
-      return authorToEdit.save()
+      try {
+        authorToEdit.born = args.setBornTo
+        await authorToEdit.save()
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        })
+      }
+      return authorToEdit
     },
   },
 }

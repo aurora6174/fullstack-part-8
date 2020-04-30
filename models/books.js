@@ -5,13 +5,14 @@ const schema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    minlength: 2,
+    minlength: 3,
   },
   published: {
     type: Number,
   },
   author: {
     type: String,
+    minlength: 5,
   },
   creator: {
     type: mongoose.Schema.Types.ObjectId,
