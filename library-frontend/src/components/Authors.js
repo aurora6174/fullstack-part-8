@@ -21,7 +21,7 @@ const Authors = ({ show, setError }) => {
       <table>
         <tbody>
           <tr>
-            <th></th>
+            <th>Authors</th>
             <th>born</th>
             <th>books</th>
           </tr>
@@ -29,7 +29,7 @@ const Authors = ({ show, setError }) => {
             <tr key={a.name}>
               <td>{a.name}</td>
               <td>{a.born}</td>
-              <td>{a.bookCount}</td>
+              <td>{a.books.length}</td>
             </tr>
           ))}
         </tbody>

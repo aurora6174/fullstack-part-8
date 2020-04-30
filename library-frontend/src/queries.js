@@ -14,9 +14,9 @@ export const ADD_BOOK = gql`
       genres: $genres
     ) {
       title
-      author
       published
       genres
+      author
     }
   }
 `
@@ -28,12 +28,21 @@ export const EDIT_AUTHOR = gql`
     }
   }
 `
+export const ADD_AUTHOR = gql`
+  mutation addNewAuthor($name: String!, $born: Int!) {
+    addAuthor(name: $name, born: $born) {
+      name
+      born
+    }
+  }
+`
 const ALL_BOOKS = gql`
   query {
     booksInDB {
-      author
       title
+      author
       published
+      genres
     }
   }
 `
@@ -41,8 +50,10 @@ export const ALL_AUTHORS = gql`
   query {
     allAuthors {
       name
-      bookCount
       born
+      books {
+        title
+      }
     }
   }
 `

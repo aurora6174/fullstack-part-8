@@ -3,6 +3,7 @@ import Authors from "./components/Authors"
 import Books from "./components/Books"
 import NewBook from "./components/NewBook"
 import Notify from "./components/Notify"
+import AddAuthor from "./components/AddAuthor"
 const App = () => {
   const [page, setPage] = useState("authors")
   const [errorMessage, setErrorMessage] = useState(null)
@@ -19,6 +20,7 @@ const App = () => {
         <button onClick={() => setPage("authors")}>authors</button>
         <button onClick={() => setPage("books")}>books</button>
         <button onClick={() => setPage("add")}>add book</button>
+        <button onClick={() => setPage("addAuthor")}>add author</button>
       </div>
 
       <Authors show={page === "authors"} setError={notify} />
@@ -26,6 +28,7 @@ const App = () => {
       <Books show={page === "books"} />
 
       <NewBook show={page === "add"} setError={notify} />
+      <AddAuthor show={page === "addAuthor"} setError={notify} />
     </div>
   )
 }

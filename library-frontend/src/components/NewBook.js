@@ -9,7 +9,7 @@ const NewBook = (props) => {
     },
   })
   const [title, setTitle] = useState("")
-  const [author, setAuhtor] = useState("")
+  const [author, setAuthor] = useState("")
   const [published, setPublished] = useState("")
   const [genre, setGenre] = useState("")
   const [genres, setGenres] = useState([])
@@ -21,13 +21,18 @@ const NewBook = (props) => {
   const submit = async (event) => {
     event.preventDefault()
     addNewBook({
-      variables: { title, author, published: Number(published), genres },
+      variables: {
+        title,
+        author,
+        published: Number(published),
+        genres,
+      },
     })
-    console.log(`title: ${title}  author: ${author} published: ${published}`)
+    console.log(`title: ${title} published: ${published}`)
 
     setTitle("")
+    setAuthor("")
     setPublished("")
-    setAuhtor("")
     setGenres([])
     setGenre("")
   }
@@ -51,11 +56,11 @@ const NewBook = (props) => {
           author
           <input
             value={author}
-            onChange={({ target }) => setAuhtor(target.value)}
+            onChange={({ target }) => setAuthor(target.value)}
           />
         </div>
         <div>
-          published
+          Published
           <input
             type="number"
             value={published}
