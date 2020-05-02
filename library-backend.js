@@ -107,13 +107,19 @@ const resolvers = {
       return { value: jwt.sign(userForToken, SECRET_KEY) }
     },
 
-    addBook: async (root, args) => {
+    addBook: async (root, args, context) => {
       const bookToAdd = new Book({ ...args })
+      const authorName = bookToAdd.author
+      const bookAuthor = await Author.findOne({ name: authorName })
       const currentUser = context.currentUser
       if (!currentUser) {
         throw new AuthenticationError("not authenticated")
       }
       try {
+        if (!bookAuthor) {
+          const newAuthor = new Author({ name: authorName })
+          await newAuthor.save()
+        }
         await bookToAdd.save()
       } catch (error) {
         throw new UserInputError(error.message, {
@@ -122,22 +128,8 @@ const resolvers = {
       }
       return bookToAdd
     },
-    addAuthor: async (root, args) => {
-      const authorToAdd = new Author({ ...args })
-      const currentUser = context.currentUser
-      if (!currentUser) {
-        throw new AuthenticationError("not authenticated")
-      }
-      try {
-        await authorToAdd.save()
-      } catch (error) {
-        throw new UserInputError(error.message, {
-          invalidArgs: args,
-        })
-      }
-      return authorToAdd
-    },
-    editAuthor: async (root, args) => {
+
+    editAuthor: async (root, args, context) => {
       const authorToEdit = await Author.findOne({ name: args.name })
       const currentUser = context.currentUser
       if (!currentUser) {

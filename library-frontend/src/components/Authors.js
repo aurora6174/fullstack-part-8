@@ -1,7 +1,6 @@
 import React from "react"
 import { useQuery } from "@apollo/client"
 import { ALL_AUTHORS } from "../queries"
-import EditAuthor from "../components/EditAuthor"
 const Authors = ({ show, setError }) => {
   const result = useQuery(ALL_AUTHORS)
 
@@ -34,7 +33,6 @@ const Authors = ({ show, setError }) => {
           ))}
         </tbody>
       </table>
-      <EditAuthor setError={setError} authorList={authors} />
     </div>
   )
 }

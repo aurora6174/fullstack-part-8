@@ -19,6 +19,9 @@ const EditAuthor = (props) => {
 
   const [name, setName] = useState({})
   const [born, setBorn] = useState("")
+  if (!props.show) {
+    return null
+  }
   const submit = async (event) => {
     event.preventDefault()
     editAuthorDetails({
