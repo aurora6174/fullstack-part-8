@@ -3,7 +3,7 @@ import Authors from "./components/Authors"
 import Books from "./components/Books"
 import NewBook from "./components/NewBook"
 import Notify from "./components/Notify"
-//import AddAuthor from "./components/AddAuthor"
+import Recommend from "./components/Recommend"
 import LoginForm from "./components/LoginForm"
 import ToggleTool from "./components/ToggleTool"
 import EditAuthor from "./components/EditAuthor"
@@ -59,6 +59,7 @@ const App = () => {
         <button onClick={() => setPage("books")}>books</button>
         <button onClick={() => setPage("add")}>add book</button>
         <button onClick={() => setPage("UpdateAuthor")}>Update Author</button>
+        <button onClick={() => setPage("Recommend")}>Recommend</button>
         <button onClick={logout}>Logout</button>
       </div>
       <Authors show={page === "authors"} setError={notify} />
@@ -70,6 +71,7 @@ const App = () => {
         setError={notify}
         authorList={authors}
       />
+      <Recommend show={page === "Recommend"} />
     </div>
   )
 }
