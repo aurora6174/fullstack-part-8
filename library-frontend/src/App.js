@@ -7,20 +7,13 @@ import Recommend from "./components/Recommend"
 import LoginForm from "./components/LoginForm"
 import ToggleTool from "./components/ToggleTool"
 import EditAuthor from "./components/EditAuthor"
-import { useQuery, useApolloClient } from "@apollo/client"
-import { ALL_AUTHORS } from "./queries"
+import { useApolloClient } from "@apollo/client"
+
 const App = () => {
   const [page, setPage] = useState("authors")
   const [errorMessage, setErrorMessage] = useState(null)
   const [token, setToken] = useState(null)
   const client = useApolloClient()
-  // const [state, setState] = useState(false)
-  const result = useQuery(ALL_AUTHORS)
-  let authors
-  if (result.loading) {
-    return <div>loading...</div>
-  }
-  authors = result.data.allAuthors
   const notify = (message) => {
     setErrorMessage(message)
     setTimeout(() => {
@@ -66,11 +59,7 @@ const App = () => {
       <Books show={page === "books"} />
       <NewBook show={page === "add"} setError={notify} />
 
-      <EditAuthor
-        show={page === "UpdateAuthor"}
-        setError={notify}
-        authorList={authors}
-      />
+      <EditAuthor show={page === "UpdateAuthor"} setError={notify} />
       <Recommend show={page === "Recommend"} />
     </div>
   )

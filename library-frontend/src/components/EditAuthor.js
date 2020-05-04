@@ -1,24 +1,30 @@
 import React, { useState } from "react"
-import { useMutation } from "@apollo/client"
+import { useMutation, useQuery } from "@apollo/client"
 import { EDIT_AUTHOR, ALL_AUTHORS } from "../queries"
 import Select from "react-select"
 
 const EditAuthor = (props) => {
+  const [name, setName] = useState({})
+  const [born, setBorn] = useState("")
   const [editAuthorDetails] = useMutation(EDIT_AUTHOR, {
     refetchQueries: [{ query: ALL_AUTHORS }],
     onError: (error) => {
       props.setError(error.message)
     },
   })
+  const result = useQuery(ALL_AUTHORS)
+  let authors
+  if (result.loading) {
+    return <div>loading...</div>
+  }
+  authors = result.data.allAuthors
   let authorsInDB = []
-  const nameList = props.authorList.map((author) => author.name)
+  const nameList = authors.map((author) => author.name)
 
   nameList.forEach((author) =>
     authorsInDB.push({ value: author, label: author })
   )
 
-  const [name, setName] = useState({})
-  const [born, setBorn] = useState("")
   if (!props.show) {
     return null
   }

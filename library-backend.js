@@ -31,7 +31,7 @@ const typeDefs = gql`
   type Query {
     bookCount: Int!
     authorCount: Int!
-    allBooks(author: String!): [Book!]!
+    allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author]!
     booksInDB: [Book!]!
     me: User
@@ -67,7 +67,17 @@ const resolvers = {
   Query: {
     bookCount: () => Book.collection.countDocuments(),
     authorCount: () => Author.collection.countDocuments(),
-    allBooks: (root, args) => Book.find({ author: args.author }),
+    allBooks: (root, args) => {
+      if (args.author && args.genre) {
+        return Book.find({ author: args.author, genres: { $in: [args.genre] } })
+      } else if (args.genre) {
+        return Book.find({ genres: { $in: [args.genre] } })
+      } else if (args.author) {
+        return Book.find({ author: args.author })
+      } else {
+        return Book.find({})
+      }
+    },
     allAuthors: (root, args) => Author.find({}),
     booksInDB: (root, args) => Book.find({}),
     me: (root, args, context) => {
