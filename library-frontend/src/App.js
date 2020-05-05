@@ -3,12 +3,12 @@ import Authors from "./components/Authors"
 //import Books from "./components/Books"
 import NewBook from "./components/NewBook"
 import Notify from "./components/Notify"
-import Recommend from "./components/Recommend"
 import LoginForm from "./components/LoginForm"
 import ToggleTool from "./components/ToggleTool"
 import EditAuthor from "./components/EditAuthor"
 import GraphqlBookGenres from "./components/GraphqlBookGenres"
 import { useApolloClient } from "@apollo/client"
+import Recommend from "./components/Recommend"
 
 const App = () => {
   const [page, setPage] = useState("authors")
@@ -53,7 +53,7 @@ const App = () => {
         <button onClick={() => setPage("graphqlbooks")}>Books</button>
         <button onClick={() => setPage("add")}>add book</button>
         <button onClick={() => setPage("UpdateAuthor")}>Update Author</button>
-        <button onClick={() => setPage("Recommend")}>Recommend</button>
+        <button onClick={() => setPage("Recommended")}>Recommend</button>
 
         <button onClick={logout}>Logout</button>
       </div>
@@ -62,7 +62,7 @@ const App = () => {
       <NewBook show={page === "add"} setError={notify} />
 
       <EditAuthor show={page === "UpdateAuthor"} setError={notify} />
-      <Recommend show={page === "Recommend"} />
+      <Recommend show={page === "Recommended"} />
     </div>
   )
 }

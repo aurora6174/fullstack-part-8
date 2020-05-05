@@ -12,13 +12,12 @@ const Recommend = (props) => {
     return <div>Loading...</div>
   }
   const fav = result.data.me.favoriteGenre
-  console.log(fav)
+
   const bookBasedOnGenre = books.data.booksInDB
-  console.log(bookBasedOnGenre)
+
   const filtered = bookBasedOnGenre.filter((book) =>
     book.genres.includes(fav.toLowerCase())
   )
-  console.log(filtered)
   return (
     <div>
       <h2>Recommendations</h2>

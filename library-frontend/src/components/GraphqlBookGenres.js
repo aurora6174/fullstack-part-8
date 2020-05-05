@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react"
 import { useLazyQuery } from "@apollo/client"
-import { GET_BOOKS_BY_GENRE } from "../queries"
+import ALL_BOOKS, { GET_BOOKS_BY_GENRE, ALL_AUTHORS } from "../queries"
 
 const GraphqlBooks = (props) => {
   const [books, setBooks] = useState([])
-  const [getBook, { loading, data }] = useLazyQuery(GET_BOOKS_BY_GENRE)
+  const [getBook, { loading, data }] = useLazyQuery(GET_BOOKS_BY_GENRE, {
+    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
+    onError: (error) => {
+      props.setError(error.message)
+    },
+  })
 
   let booksToDisplay = books
 
