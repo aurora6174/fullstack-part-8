@@ -1,12 +1,13 @@
 import React, { useState } from "react"
 import Authors from "./components/Authors"
-import Books from "./components/Books"
+//import Books from "./components/Books"
 import NewBook from "./components/NewBook"
 import Notify from "./components/Notify"
 import Recommend from "./components/Recommend"
 import LoginForm from "./components/LoginForm"
 import ToggleTool from "./components/ToggleTool"
 import EditAuthor from "./components/EditAuthor"
+import GraphqlBookGenres from "./components/GraphqlBookGenres"
 import { useApolloClient } from "@apollo/client"
 
 const App = () => {
@@ -31,14 +32,14 @@ const App = () => {
         <Notify errorMessage={errorMessage} />
         <div>
           <button onClick={() => setPage("authors")}>authors</button>
-          <button onClick={() => setPage("books")}>books</button>
+          <button onClick={() => setPage("graphqlbooks")}>books</button>
           <ToggleTool buttonLabel="Login">
             <LoginForm setToken={setToken} setError={notify} />
           </ToggleTool>
         </div>
 
         <Authors show={page === "authors"} setError={notify} />
-        <Books show={page === "books"} />
+        <GraphqlBookGenres show={page === "graphqlbooks"} />
       </div>
     )
   }
@@ -49,14 +50,15 @@ const App = () => {
 
       <div>
         <button onClick={() => setPage("authors")}>authors</button>
-        <button onClick={() => setPage("books")}>books</button>
+        <button onClick={() => setPage("graphqlbooks")}>Books</button>
         <button onClick={() => setPage("add")}>add book</button>
         <button onClick={() => setPage("UpdateAuthor")}>Update Author</button>
         <button onClick={() => setPage("Recommend")}>Recommend</button>
+
         <button onClick={logout}>Logout</button>
       </div>
       <Authors show={page === "authors"} setError={notify} />
-      <Books show={page === "books"} />
+      <GraphqlBookGenres show={page === "graphqlbooks"} />
       <NewBook show={page === "add"} setError={notify} />
 
       <EditAuthor show={page === "UpdateAuthor"} setError={notify} />
