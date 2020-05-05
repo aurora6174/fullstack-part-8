@@ -7,8 +7,14 @@ import LoginForm from "./components/LoginForm"
 import ToggleTool from "./components/ToggleTool"
 import EditAuthor from "./components/EditAuthor"
 import GraphqlBookGenres from "./components/GraphqlBookGenres"
-import { useApolloClient } from "@apollo/client"
+import {
+  useQuery,
+  useMutation,
+  useSubscription,
+  useApolloClient,
+} from "@apollo/client"
 import Recommend from "./components/Recommend"
+import ALL_BOOKS, { BOOK_ADDED } from "./queries"
 
 const App = () => {
   const [page, setPage] = useState("authors")
@@ -26,6 +32,27 @@ const App = () => {
     localStorage.clear()
     client.resetStore()
   }
+  const updateCacheWith = (addedBook) => {
+    const includedIn = (set, object) => set.map((p) => p.id).includes(object.id)
+
+    const dataInStore = client.readQuery({ query: ALL_BOOKS })
+    if (!includedIn(dataInStore.booksInDB, addedBook)) {
+      client.writeQuery({
+        query: ALL_BOOKS,
+        data: { booksInDB: dataInStore.booksInDB.concat(addedBook) },
+      })
+    }
+  }
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      const addedBook = subscriptionData.data.bookAdded
+      window.alert(`${addedBook.title} added!`)
+      console.log(subscriptionData)
+      updateCacheWith(addedBook)
+    },
+  })
+
   if (!token) {
     return (
       <div>
@@ -59,7 +86,11 @@ const App = () => {
       </div>
       <Authors show={page === "authors"} setError={notify} />
       <GraphqlBookGenres show={page === "graphqlbooks"} />
-      <NewBook show={page === "add"} setError={notify} />
+      <NewBook
+        show={page === "add"}
+        setError={notify}
+        updateCacheWith={updateCacheWith}
+      />
 
       <EditAuthor show={page === "UpdateAuthor"} setError={notify} />
       <Recommend show={page === "Recommended"} />

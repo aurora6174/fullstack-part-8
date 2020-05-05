@@ -7,6 +7,9 @@ const NewBook = (props) => {
     onError: (error) => {
       props.setError(error.message)
     },
+    update: (store, response) => {
+      props.updateCacheWith(response.data.addBook)
+    },
   })
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")

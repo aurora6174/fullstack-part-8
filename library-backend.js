@@ -3,7 +3,9 @@ const {
   UserInputError,
   gql,
   AuthenticationError,
+  PubSub,
 } = require("apollo-server")
+const pubsub = new PubSub()
 const mongoose = require("mongoose")
 const Author = require("./models/author")
 const Book = require("./models/books")
@@ -48,6 +50,9 @@ const typeDefs = gql`
     addAuthor(name: String!, born: Int!): Author
     createUser(username: String!, favoriteGenre: String!): User
     login(username: String!, password: String!): Token
+  }
+  type Subscription {
+    bookAdded: Book!
   }
   type Author {
     name: String!
@@ -136,6 +141,7 @@ const resolvers = {
           invalidArgs: args,
         })
       }
+      pubsub.publish("BOOK_ADDED", { bookAdded: bookToAdd })
       return bookToAdd
     },
 
@@ -156,6 +162,11 @@ const resolvers = {
       return authorToEdit
     },
   },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator(["BOOK_ADDED"]),
+    },
+  },
 }
 
 const server = new ApolloServer({
@@ -171,6 +182,7 @@ const server = new ApolloServer({
   },
 })
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl }) => {
   console.log(`Server ready at ${url}`)
+  console.log(`Subscriptions ready at ${subscriptionsUrl}`)
 })

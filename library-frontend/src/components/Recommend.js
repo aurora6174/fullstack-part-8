@@ -11,6 +11,7 @@ const Recommend = (props) => {
   if (result.loading) {
     return <div>Loading...</div>
   }
+
   const fav = result.data.me.favoriteGenre
 
   const bookBasedOnGenre = books.data.booksInDB

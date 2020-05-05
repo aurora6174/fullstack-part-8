@@ -9,13 +9,15 @@
   "author": "Joe M.",
   "license": "ISC",
   "dependencies": {
+    "@apollo/link-ws": "^2.0.0-beta.3",
     "apollo-link-context": "^1.0.20",
     "apollo-server": "^2.12.0",
     "concurrently": "^5.2.0",
     "graphql": "^15.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.10",
-    "mongoose-unique-validator": "^2.0.3"
+    "mongoose-unique-validator": "^2.0.3",
+    "subscriptions-transport-ws": "^0.9.16"
   },
   "devDependencies": {
     "nodemon": "^2.0.3"
